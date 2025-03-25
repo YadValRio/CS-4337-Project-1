@@ -25,6 +25,18 @@
   (unless (equal? input "quit")
     (set! notation (push-char-stack notation input))))
 
+(define (calculate num1 num2 operation)
+  (cond
+    [(char=? operation #\+) (+ num1 num2)]
+    [(char=? operation #\-) (- num1 num2)]
+    [(char=? operation #\*) (* num1 num2)]
+    [(char=? operation #\/) (if (=num2 0)
+                         (error "Division by 0 is not allowed!")
+                         (/ num1 num2))]
+    [else (error "Invalid operators! Only '+', '-', '*', '/' are allowed!")]))
+
+; Run all together
+
 (get-notation)
 
 (displayln notation)
