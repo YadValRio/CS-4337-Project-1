@@ -11,5 +11,5 @@
      (error "The stack you are trying to access is empty")
      (values (car stack) (cdr stack))))
 
-(define (push stack) ; also applicable for both locations
+(define (push stack item) ; also applicable for both locations
   (cons item stack))
