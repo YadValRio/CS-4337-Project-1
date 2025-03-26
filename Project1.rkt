@@ -8,16 +8,13 @@
 
 (define operations null)
 
-(define (pop stack) ; usable for either history or notation
+(define (pop stack) ; usable for either nums or notation
   (if (null? stack)
       (error "The stack you are trying to access is empty") 
       (values (car stack) (cdr stack))))
 
-(define (push stack item)
+(define (push stack item) ; also usable for both all stacks
   (cons item stack))
-
-(define (push-char-stack stack str) ; pushes the input string as a list of chars
-  (foldl push stack (string->list str)))
 
 ; Calculator
 
@@ -26,14 +23,25 @@
   (define input (read-line))
   (unless (equal? input "quit")
     (for ([char (string->list input)])
-    (cond
-      ; if is a number
-      [(char-numeric? char)
-       (set! nums (push nums (string->number (string char))))]
-      ; if is an operation
-      [(member char '(#\+ #\- #\* #\/))
-       (set! operations (push operations char))]
-      [else (displayln("Invalid input detected. Must be either a number or a simple operation ('+', '-', '*', '/')."))]))))
+      (cond
+        ; if is a number
+        [(char-numeric? char)
+         (set! nums (push nums (string->number (string char))))]
+        ; if is an operation
+        [(member char '(#\+ #\- #\* #\/))
+         (set! operations (push operations char))]
+        [else (displayln("Invalid input detected. Must be either a number or a simple operation ('+', '-', '*', '/')."))]))))
+
+(define (solve-equation)
+  (if (and (not (null? nums)) (not (null? operations)))
+      (let-values ([(num1 new-nums) (pop nums)])
+        (let-values ([(num2 final-nums) (pop new-nums)])
+          (let-values ([(op new-operations) (pop operations)])
+            (define result (calculate num2 num1 op))
+            (set! nums (push final-nums result))
+            (set! operations new-operations)
+            (solve-equation))))  ; Recursive call
+      (void)))  ; Base case: Do nothing when stacks are empty
 
 (define (calculate num1 num2 operation)
   (define result
@@ -51,6 +59,7 @@
 ; Run all together
 
 (get-notation)
+(solve-equation)
 
 (displayln nums)
 
