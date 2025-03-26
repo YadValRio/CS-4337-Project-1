@@ -4,11 +4,13 @@
 
 (define history null)
 
-(define notation null)
+(define nums null)
+
+(define operations null)
 
 (define (pop stack) ; usable for either history or notation
   (if (null? stack)
-      (error "The stack you are trying to access is empty")
+      (error "The stack you are trying to access is empty") 
       (values (car stack) (cdr stack))))
 
 (define (push stack item)
@@ -23,7 +25,15 @@
   (display "Enter a postfix/Polish notation expression (or type \"quit\" to quit: ")
   (define input (read-line))
   (unless (equal? input "quit")
-    (set! notation (push-char-stack notation input))))
+    (for ([char (string->list input)])
+    (cond
+      ; if is a number
+      [(char-numeric? char)
+       (set! nums (push nums (string->number (string char))))]
+      ; if is an operation
+      [(member char '(#\+ #\- #\* #\/))
+       (set! operations (push operations char))]
+      [else (displayln("Invalid input detected. Must be either a number or a simple operation ('+', '-', '*', '/')."))]))))
 
 (define (calculate num1 num2 operation)
   (define result
@@ -42,4 +52,6 @@
 
 (get-notation)
 
-(displayln notation)
+(displayln nums)
+
+(displayln operations)
