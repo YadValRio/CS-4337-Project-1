@@ -31,7 +31,10 @@
            (let-values ([(num2 final-nums) (pop new-nums)])
              (define result (calculate num1 num2 char))
              (set! nums (push final-nums result))))]
-        [else (displayln("Invalid input detected. Must be either a number or a simple operation ('+', '-', '*', '/')."))]))))
+        [else (displayln("Invalid input detected. Must be either a number or a simple operation ('+', '-', '*', '/')."))])))
+  (displayln nums) ; if done correctly, nums should only have the final answer at the end
+  (set! nums null)
+  (get-notation))
 
 (define (calculate num1 num2 operation)
   (define result
@@ -49,5 +52,3 @@
 ; Run all together
 
 (get-notation)
-
-(displayln nums)
