@@ -30,8 +30,9 @@
          (when (= (length nums) 2)
            (let-values ([(num1 new-nums) (pop nums)])
              (let-values ([(num2 final-nums) (pop new-nums)])
-               (define result (calculate num1 num2 (pop operations)))
-               (set! nums (push final-nums result)))))]
+               (let-values ([(op new-op) (pop operations)])
+                 (define result (calculate num1 num2 op))
+                 (set! nums (push final-nums result))))))]
 
 
         ; if is an operation
