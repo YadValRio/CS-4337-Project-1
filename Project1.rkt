@@ -17,10 +17,10 @@
 ; Calculator
 
 (define (get-notation)
-  (display "Enter a postfix/Polish notation expression (or type \"quit\" to quit: ")
+  (display "Enter a prefix/Polish notation expression (or type \"quit\" to quit: ")
   (define input (read-line))
   (unless (equal? input "quit")
-    (for ([char (string->list input)])
+    (for ([char (reverse(string->list input))])
       (cond
         ; if is a number
         [(char-numeric? char)
