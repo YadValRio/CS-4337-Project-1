@@ -17,7 +17,7 @@
 ; Calculator
 
 (define (get-notation)
-  (display "Enter a prefix/Polish notation expression (or type \"quit\" to quit: ")
+  (display "Enter a prefix/Polish notation expression (or type \"quit\" to quit): ")
   (define input (read-line))
   (unless (equal? input "quit")
     (for ([char (reverse(string->list input))])
@@ -31,10 +31,10 @@
            (let-values ([(num2 final-nums) (pop new-nums)])
              (define result (calculate num1 num2 char))
              (set! nums (push final-nums result))))]
+        [(char-whitespace? char)] ; ignore whitespace
         [else (displayln("Error: invalid input detected. Must be either a number or a simple operation ('+', '-', '*', '/')."))]))
-  (displayln nums) ; if done correctly, nums should only have the final answer at the end
-  (set! nums null)
-  (get-notation)))
+    (add-to-history nums)
+    (get-notation)))
 
 (define (calculate num1 num2 operation)
   (define result
@@ -49,6 +49,18 @@
   (set! history (push history result))
   result)
 
+(define (add-to-history stack)
+  (when (not (null? nums))
+    (let-values ([(result new-nums) (pop nums)])
+      (define result-double (real->double-flonum result))
+      (set! history (push history result-double))
+      (display #\$)
+      (display (length history))
+      (display ": ")
+      (displayln result-double)
+      (set! nums null))))
+
 ; Run all together
 
 (get-notation)
+(displayln history)
