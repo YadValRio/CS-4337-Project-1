@@ -25,6 +25,19 @@
         ; if is a number
         [(char-numeric? char)
          (set! nums (push nums (real->double-flonum (string->number (string char)))))]
+        
+        ; if is '$', pop the last number from the stack, find that index in the history, and push back onto the stack
+        [(char=? char #\$)
+         (if (null? nums)
+             (displayln "Error: no number to find the index of")
+             (let-values ([(index new-nums) (pop nums)])
+               (if (or (not (real? index)) (< index 1) (> index (length history)))
+                   (displayln "Error: Invalid index for history extraction")
+                   (let ([retrieved (get-value history index)])
+                     (set! nums (push new-nums retrieved))))))]
+
+             
+        
         ; if is an operation
         [(member char '(#\+ #\- #\* #\/))
          (let-values ([(num1 new-nums) (pop nums)])
@@ -59,6 +72,13 @@
       (displayln result)
       (set! nums null))))
 
+(define (get-value lst index)
+  (let ([int-index (exact-floor index)])
+    (if (or (< int-index 1) (>= int-index (add1 (length lst))))
+        (error "Error: Index out of bounds")
+        (list-ref lst (- int-index 1)))))
+
 ; Run all together
 
 (get-notation)
+(displayln history)
