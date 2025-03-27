@@ -24,7 +24,7 @@
       (cond
         ; if is a number
         [(char-numeric? char)
-         (set! nums (push nums (string->number (string char))))]
+         (set! nums (push nums (real->double-flonum (string->number (string char)))))]
         ; if is an operation
         [(member char '(#\+ #\- #\* #\/))
          (let-values ([(num1 new-nums) (pop nums)])
@@ -46,21 +46,19 @@
                                   (error "Error: division by 0 is not allowed!")
                                   (/ num1 num2))]
       [else (error "Error: invalid operators! Only '+', '-', '*', '/' are allowed!")]))
-  (set! history (push history result))
   result)
 
 (define (add-to-history stack)
   (when (not (null? nums))
     (let-values ([(result new-nums) (pop nums)])
-      (define result-double (real->double-flonum result))
-      (set! history (push history result-double))
+      ;(define result-double (real->double-flonum result))
+      (set! history (push history result))
       (display #\$)
       (display (length history))
       (display ": ")
-      (displayln result-double)
+      (displayln result)
       (set! nums null))))
 
 ; Run all together
 
 (get-notation)
-(displayln history)
