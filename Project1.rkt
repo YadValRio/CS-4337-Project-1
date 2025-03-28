@@ -25,6 +25,7 @@
 ; Calculator
 
 (define (get-notation)
+  (with-handlers ([exn:fail? (lambda (e) (displayln (exn-message e)) (get-notation))]) ; will 
   (unless (not prompt?)
     (display "Enter a prefix/Polish notation expression (or type \"quit\" to quit): "))
   (define input (read-line))
@@ -52,7 +53,7 @@
         [(char-whitespace? char)] ; ignore whitespace
         [else (displayln("Error: invalid input detected. Must be either a number or a simple operation ('+', '-', '*', '/')."))]))
     (add-to-history nums)
-    (get-notation)))
+    (get-notation))))
 
 (define (calculate num1 num2 operation)
   (define result
