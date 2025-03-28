@@ -41,7 +41,7 @@
              (displayln "Error: no number to find the index of")
              (let-values ([(index new-nums) (pop nums)])
                (if (or (not (real? index)) (< index 1) (> index (length history)))
-                   (displayln "Error: Invalid index for history extraction")
+                   (error "Error: Invalid index for history extraction")
                    (let ([retrieved (get-value history index)])
                      (set! nums (push new-nums retrieved))))))]   
         ; if is an operation
@@ -50,8 +50,9 @@
            (let-values ([(num2 final-nums) (pop new-nums)])
              (define result (calculate num1 num2 char))
              (set! nums (push final-nums result))))]
-        [(char-whitespace? char)] ; ignore whitespace
-        [else (displayln("Error: invalid input detected. Must be either a number or a simple operation ('+', '-', '*', '/')."))]))
+        ; ignore whitespace
+        [(char-whitespace? char)]
+        [else error ("Error: invalid input detected. Please enter either a number or a simple operation ('+', '-', '*', '/').")]))
     (add-to-history nums)
     (get-notation))))
 
@@ -87,4 +88,3 @@
 ; Run all together
 
 (get-notation)
-(display (reverse history))
