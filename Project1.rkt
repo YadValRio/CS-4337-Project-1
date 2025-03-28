@@ -1,5 +1,13 @@
 #lang racket
 
+(define prompt?
+  (let [(args (current-command-line-arguments))]
+    (cond
+      [(= (vector-length args) 0) #t]
+      [(string=? (vector-ref args 0) "-b") #f]
+      [(string=? (vector-ref args 0) "--batch") #f]
+      [else #t])))
+
 ; Stacks and their functions
 
 (define history null)
@@ -17,7 +25,8 @@
 ; Calculator
 
 (define (get-notation)
-  (display "Enter a prefix/Polish notation expression (or type \"quit\" to quit): ")
+  (unless (not prompt?)
+    (display "Enter a prefix/Polish notation expression (or type \"quit\" to quit): "))
   (define input (read-line))
   (unless (equal? input "quit")
     (for ([char (reverse(string->list input))])
@@ -75,3 +84,6 @@
         (list-ref reversed-lst (- int-index 1)))))
 
 ; Run all together
+
+(get-notation)
+(display (reverse history))
