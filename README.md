@@ -3,4 +3,4 @@
 
 ![A sample of how a user would interact with the program][Output]
 
-[Output]: Project-1-Output.png
+[Output]: Project 1 Output.png
