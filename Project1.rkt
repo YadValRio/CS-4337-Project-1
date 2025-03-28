@@ -25,7 +25,7 @@
 ; Calculator
 
 (define (get-notation)
-  (with-handlers ([exn:fail? (lambda (e) (displayln (exn-message e)) (get-notation))]) ; will 
+  (with-handlers ([exn:fail? (lambda (e) (displayln (exn-message e)) (get-notation))]) ; will start over get-notation whenever an error is encountered
   (unless (not prompt?)
     (display "Enter a prefix/Polish notation expression (or type \"quit\" to quit): "))
   (define input (read-line))
