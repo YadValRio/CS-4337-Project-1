@@ -29,6 +29,7 @@
     (display "Enter a prefix/Polish notation expression (or type \"quit\" to quit): "))
   (define input (read-line))
   (unless (equal? input "quit")
+    (define valid-input? #t)
     (for ([char (reverse(string->list input))])
       (cond
         ; if is a number
@@ -40,7 +41,7 @@
              (displayln "Error: no number to find the index of")
              (let-values ([(index new-nums) (pop nums)])
                (if (or (not (real? index)) (< index 1) (> index (length history)))
-                   (displayln "Error: Invalid index for history extraction")
+                   (begin (displayln "Error: Invalid index for history extraction") (set! valid-input? #f))
                    (let ([retrieved (get-value history index)])
                      (set! nums (push new-nums retrieved))))))]   
         ; if is an operation
@@ -50,9 +51,12 @@
              (define result (calculate num1 num2 char))
              (set! nums (push final-nums result))))]
         [(char-whitespace? char)] ; ignore whitespace
-        [else (displayln("Error: invalid input detected. Must be either a number or a simple operation ('+', '-', '*', '/')."))]))
-    (add-to-history nums)
-    (get-notation)))
+        [(not valid-input?)] ; so that the error message doesn't print for every incorrect character
+        [else (displayln"Error: invalid input detected. Must be either a number or a simple operation ('+', '-', '*', '/').")
+              (set! valid-input? #f)]))
+    (if valid-input?
+        (begin (add-to-history nums) (get-notation))
+        (get-notation))))
 
 (define (calculate num1 num2 operation)
   (define result
